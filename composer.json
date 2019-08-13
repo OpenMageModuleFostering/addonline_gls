@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Addonline_Gls",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "mode le livraison GLS France",
+    "authors": [
+    {
+        "name": "Addonline",
+        "email": "contact@addonline.fr"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
