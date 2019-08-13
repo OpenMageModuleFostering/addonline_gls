@@ -254,6 +254,13 @@ class Addonline_Gls_Block_Export_Orders_Grid extends Mage_Adminhtml_Block_Widget
                     'url' => $this->getUrl('*/*/export')
             )
         );
+        $this->getMassactionBlock()->addItem(
+            'export_order_local',
+            array(
+                    'label' => Mage::helper('gls')->__('Download'),
+                    'url' => $this->getUrl('*/*/download')
+            )
+        );
         
         return $this;
     }

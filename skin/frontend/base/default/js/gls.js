@@ -55,9 +55,17 @@ jQuery(function($) {
 	jQuery('.onestepcheckout-index-index .address-select').on("change", function() {
 		if(jQuery('#gls-location').size() <= 0 ){	
 			$("#attentionGLS").remove();
-			$("label[for=\"billing-address-select\"]").parent().before('<p id="attentionGLS" style="font-weight:bold;color:red;text-align:justify; padding-right:5px;">Suite à la modification de votre adresse et si votre mode de livraison est GLS, veuillez séléctionner votre point de retrait en cliquant sur le mode de livraison.</p>');
-		}
+			$("label[for=\"billing-address-select\"]").parent().before('<p id="attentionGLS" style="font-weight:bold;color:red;text-align:justify; padding-right:5px;">Suite à la modification de votre adresse et si votre mode de livraison est GLS, veuillez séléctionner votre point de retrait en cliquant sur le mode de livraison.</p>');			
+		}				
 	}); 	
+	
+	jQuery('select[name="shipping_address_id"]').on("change",function(){
+		unsetGLSShippingMethod();
+	});	
+	
+	jQuery('input[name="billing[use_for_shipping]"]').on("change",function(){		
+		unsetGLSShippingMethod();
+	});
 	
 	/**
 	 * Sur l'événement change des radios boutons de choix de mode de livraison
@@ -103,6 +111,8 @@ jQuery(function($) {
  */
 function initGlsLogos() {
 	
+	var gls_theme = jQuery('#GLS_theme').text();
+	
 	jQuery("input[id^=\"s_method_gls\"]").each(function(index, element){
 		
 		if(!jQuery("body").hasClass("onestepcheckout-index-index")) {
@@ -116,7 +126,11 @@ function initGlsLogos() {
 		if (typeGls) {
 			var radioParent = jQuery(element).parent();
 			if (radioParent.children('img').size() == 0) {
-				radioParent.prepend('<img src="/skin/frontend/base/default/images/gls/picto_'+typeGls+'.png" >');
+//				if(gls_theme == 'Mobile'){
+//					radioParent.prepend('<img src="/skin/frontend/default/iphone/images/gls/picto_'+typeGls+'.png" >');
+//				}else{
+					radioParent.prepend('<img src="/skin/frontend/base/default/images/gls/picto_'+typeGls+'.png" >');
+//				}
 			}
 			
 			if (typeGls=='relay') {
@@ -143,20 +157,21 @@ function getTypeGlsFromRadio(radio, forDescription) {
 	var typeGls = shippingMethod.replace("gls_","");
 	if (typeGls.startWith("tohome")) {		
 		return 'tohome';
-	} else if (typeGls.startWith("toyou")) {
-		return 'toyou';
+	} else if (typeGls.startWith("fds")) {
+		return 'fds';
 	} else if (typeGls.startWith("relay")){ 
 		return 'relay';
 	} else {
 		// Sinon c'est un type de livraison inconnu
-		alert("Mauvaise configuration du module GLS : dans le champ configuration le code doit commencer par tohome, toyou ou relay");
+		alert("Mauvaise configuration du module GLS : dans le champ configuration le code doit commencer par tohome, fds ou relay");
 		return false;
 	}
 }
 
 function shippingGLSRadioCheck(element) {	
 	var glsRadio = jQuery(element);	
-	var typeGls =  getTypeGlsFromRadio(glsRadio, false);				
+	var typeGls =  getTypeGlsFromRadio(glsRadio, false);		
+	
 	if(typeGls == "relay"){
 		// on affiche le picto de chargement étape suivante du opc
 		jQuery("#shipping-method-please-wait").show();		
@@ -176,12 +191,24 @@ function shippingGLSRadioCheck(element) {
 function resetGLSShippingMethod() {
 	if (jQuery('#gls_relais_choisi').size()==0) {
 		jQuery("input[name='shipping_method']:checked").prop("checked","");
-	}
+	}				
+}
+
+function unsetGLSShippingMethod(){
+	jQuery("input[name='shipping_method']:checked").prop("checked","");
+	glsurl = glsBaseUrl + "clearSessionRelayInformations/";	
+	
+	jQuery.ajax({
+		url: glsurl,
+		success: function(data){
+			jQuery('#gls_relais_choisi').remove();
+		}
+	});	
 }
 
 function geocodeGLSAdresse() {
 		
-	var searchAdress = jQuery('#cp_recherche').val();		
+	var searchAdress = jQuery('#adresse_recherche').val()+' '+jQuery('#cp_recherche').val();		
 	if ((typeof google) != "undefined") {
 		var geocoder = new google.maps.Geocoder();		
 		geocoder.geocode({'address': searchAdress}, function(results, status) {
@@ -192,6 +219,7 @@ function geocodeGLSAdresse() {
 				loadListePointRelais();
 			} else {
 				alert('Adresse invalide '+searchAdress);
+				unsetGLSShippingMethod();
 			}
 	    });
 	} else {
@@ -208,12 +236,16 @@ function changeMap() {
 function loadListePointRelais() {	
 	if(jQuery("#cp_recherche").val()){
 		glsurl = glsBaseUrl + "listPointsRelais"
-		glsurl = glsurl + "/zipcode/" + jQuery("#cp_recherche").val() + "/country/" + "FR";
+		glsurl = glsurl + "/address/" + jQuery("#adresse_recherche").val() + "/zipcode/" + jQuery("#cp_recherche").val() + "/country/" + "FR"+ "/city/" + jQuery("#city_recherche").val() ;
 		jQuery.ajax({
 			url: glsurl,
-			success: function(data){				
-				jQuery("#col_droite_gls").html(data);	
-				showGLSMap();
+			success: function(data){	
+				if(data.indexOf("gls_ws_error") <= 0){
+					jQuery("#col_droite_gls").html(data);	
+					showGLSMap();
+				}else{
+					jQuery("#layer_gls_wrapper .contenu").append(data);
+				}
 			}
 		});		
 	}
@@ -350,8 +382,7 @@ function clickHandler(markerGLS,infowindowGLS, index){
     glsOpenedInfowindow=infowindowGLS;
     
     // Mise en évidence du relais dans la liste
-	jQuery("#layer_gls .gls_point_relay").removeClass("current").eq(index).addClass("current");
-	console.log(jQuery(".gls_point_relay").eq(index).position().top);
+	jQuery("#layer_gls .gls_point_relay").removeClass("current").eq(index).addClass("current");	
 	jQuery("#col_droite_gls").scrollTop(0).scrollTop(jQuery(".gls_point_relay").eq(index).position().top);
     
 }
@@ -368,7 +399,7 @@ function choisirRelaisGLS(index) {
 		// (/^0(6|7)(0{8}|1{8}|2{8}|3{8}|4{8}|5{8}|6{8}|7{8}|8{8}|9{8}|12345678)$/.test(v))
 		// ) {
 		if(!v){
-			alert( Translator.translate("Please provide a valide phone number.") );
+			alert( Translator.translate("Veuillez saisir un numéro de téléphone valide (portable de préférence).") );
 			return;			
 		}
 	// }
@@ -404,9 +435,7 @@ function choisirRelaisGLS(index) {
 	    dataType: 'json', 
 		success: function(){
 			// On fait la sauvegarde de la méthode de livraison
-			shippingMethod.save();	
+			 shippingMethod.save();	
 		}
 	});		
 }
-
-

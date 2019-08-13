@@ -1,0 +1,11 @@
+[1.0.5 - 07 Janvier 2015]
+Mise en place du téléchargement des commandes
+
+[1.0.4 - 04 Novembre 2014]
+Ajout de l'automatisation des Import/Export de commande
+Ajout du champs adresse pour la recherche
+Ajout du champ « société » dans l'export des commandes
+Ajout du service « Livraison à domicile premium »
+
+[1.0.3 - 01 Octobre 2014]
+Correction d'un probleme sur l'envoi de confirmation d'expedition par email

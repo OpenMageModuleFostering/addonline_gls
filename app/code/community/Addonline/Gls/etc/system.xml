@@ -73,7 +73,7 @@
 							<label>Delivery at home</label>
 							<frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>4</sort_order>
+							<sort_order>5</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -82,7 +82,7 @@
 							<label>Delivery at home setup</label>
 							<frontend_model>gls/adminhtml_system_config_form_field_config</frontend_model>
 							<frontend_type>textarea</frontend_type>
-							<sort_order>5</sort_order>
+							<sort_order>6</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -93,7 +93,7 @@
 						<ordertohome translate="label">
 							<label>Delivery at home order</label>
 							<frontend_type>text</frontend_type>
-							<sort_order>6</sort_order>
+							<sort_order>7</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -101,11 +101,39 @@
 								<livraisontohome>1</livraisontohome>
 							</depends>
 						</ordertohome>
+						<livraisonfds translate="label">
+                            <label>Delivery guaranteed at home</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </livraisonfds>                                              
+                        <configfds translate="label">
+                            <label>Delivery guaranteed at home setup</label>
+                            <frontend_model>gls/adminhtml_system_config_form_field_config</frontend_model>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><livraisonfds>1</livraisonfds></depends>
+                        </configfds>
+                        <orderfds translate="label">
+                            <label>Delivery guaranteed at home order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><livraisonfds>1</livraisonfds></depends>
+	                    </orderfds> 
 						<livraisonrelay translate="label">
 							<label>Shop Delivery</label>
 							<frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>10</sort_order>
+							<sort_order>11</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -114,7 +142,7 @@
 							<label>Shop Delivery setup</label>
 							<frontend_model>gls/adminhtml_system_config_form_field_config</frontend_model>
 							<frontend_type>textarea</frontend_type>
-							<sort_order>11</sort_order>
+							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -125,7 +153,7 @@
 						<orderrelay translate="label">
 							<label>Shop Delivery order</label>
 							<frontend_type>text</frontend_type>
-							<sort_order>12</sort_order>
+							<sort_order>13</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -157,39 +185,7 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
-						</tracking_view_url>
-						<importexport translate="label">
-							<label>Import/Export functionalities</label>
-							<frontend_type>select</frontend_type>
-							<comment>{importexport_help}</comment>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>17</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</importexport>
-						<export_folder translate="label">
-							<label>Export folder</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>18</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<importexport>1</importexport>
-							</depends>
-						</export_folder>
-						<import_folder translate="label">
-							<label>Import folder</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>19</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<importexport>1</importexport>
-							</depends>
-						</import_folder>
+						</tracking_view_url>						
 						<debug translate="label comment">
 							<label>Debug</label>
 							<comment>{debug_help}</comment>
@@ -254,8 +250,79 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</weight_unit>
+						
 					</fields>
 				</general>
+				<import_export translate="label">
+					<label>Import / Export Configuration</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>2</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<active	translate="label">
+							<label>Active</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</active>
+						<frequence translate="label">
+							<label>frequence</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>15</sort_order>
+							<backend_model>gls/cron</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</frequence>
+						<cron_expression translate="label">
+							<label>cron expression</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>15</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</cron_expression>
+						<import_folder translate="label">
+							<label>Import folder</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</import_folder>
+						<import_order_status translate="label">
+                            <label>Import order status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </import_order_status>
+						<export_folder translate="label">
+							<label>Export folder</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</export_folder>
+						<export_order_status translate="label">
+                            <label>Export order status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </export_order_status>
+					</fields>
+				</import_export>
 				<bundle_product translate="label">
 					<label>Bundle Product Management</label>
 					<frontend_type>text</frontend_type>
@@ -352,5 +419,5 @@
 				</configurable_product>
 			</groups>
 		</gls>
-	</sections>
+	</sections>	
 </config>

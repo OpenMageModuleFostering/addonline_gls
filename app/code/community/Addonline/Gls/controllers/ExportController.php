@@ -72,4 +72,29 @@ class Addonline_Gls_ExportController extends Mage_Adminhtml_Controller_Action
             $this->_redirect('*/*/');
         }
     }
+    
+    /**
+     * Export Action : Generates a CSV file to download
+     */
+    public function downloadAction ()
+    {
+        /* get the orders */
+        $orderIds = $this->getRequest()->getPost('order_ids');
+    
+        if (isset($orderIds) && ($orderIds[0] != "")) {
+    
+            $collection = Mage::getResourceModel('sales/order_collection');
+            $collection->addAttributeToFilter('entity_id', $orderIds);
+    
+            $export = Mage::getModel('gls/export');
+            $csvData = $export->export($collection,true);
+    
+            /* download the file */
+            $this->_prepareDownloadResponse('GlsCmd_'.date('Ymdhis').'.csv', $csvData, 'text/csv');
+      
+        } else {
+            $this->_getSession()->addError($this->__('No Order has been selected'));
+            $this->_redirect('*/*/');
+        }
+    }
 }

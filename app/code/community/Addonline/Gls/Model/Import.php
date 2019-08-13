@@ -76,6 +76,8 @@ class Addonline_Gls_Model_Import
                             // On met à jour le trackid avec le champ 18
                             if ($order && ! isset($aOrdersUpdated[$data[4]])) {
                                 $order->setGlsTrackid($data[17]);
+                                //On flag la commande comme importée
+                                $order->setGlsImported(1);                                
                                 $order->save();
                                 $aOrdersUpdated[$data[4]] = 1;
                                 $count ++;
@@ -84,6 +86,8 @@ class Addonline_Gls_Model_Import
                             
                             if ($order && $aOrdersUpdated[$data[4]]) {
                                 $order->setGlsTrackid($order->getGlsTrackid() . ',' . $data[17]);
+                                //On flag la commande comme importée
+                                $order->setGlsImported(1);
                                 $order->save();
                             }
                         }
@@ -186,11 +190,11 @@ class Addonline_Gls_Model_Import
             ->addObject($order)
             ->save();
         
-        // $emailSentStatus = $shipment->getData('email_sent');
-        // if (!is_null($customerEmail) && !$emailSentStatus) {
-        // $shipment->sendEmail(true, $customerEmailComments);
-        // $shipment->setEmailSent(true);
-        // }
+        $emailSentStatus = $shipment->getData('email_sent');
+        if (!is_null($customerEmail) && !$emailSentStatus) {
+        $shipment->sendEmail(true, $customerEmailComments);
+        $shipment->setEmailSent(true);
+        }
         
         return $this;
     }

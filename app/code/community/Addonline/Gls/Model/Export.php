@@ -36,6 +36,14 @@ class Addonline_Gls_Model_Export
     public $fileMimeType;
 
     public $fileCharset;
+    
+    private $_aProductnoCorrespondance = array(
+            'ls_tohome' => 02,
+            'ls_tohome_international' => 01,
+            'ls_fds' => 18,
+            'ls_fds_international' => 19,
+            'ls_relay' => 17
+    );
 
     public function run ()
     {
@@ -45,7 +53,7 @@ class Addonline_Gls_Model_Export
         }
     }
 
-    public function export ($collection)
+    public function export ($collection, $local = false)
     {
         if ($collection->getSize() > 0) {
             
@@ -73,6 +81,7 @@ class Addonline_Gls_Model_Export
                     'PRODUCTNO',
                     'ORDERWEIGHTTOT',
                     'CONSID',
+                    'CONTACT',
                     'CONTACTMAIL',
                     'CONTACTMOBILE',
                     'CONTACTPHONE',
@@ -97,26 +106,44 @@ class Addonline_Gls_Model_Export
                 // ORDERID
                 $aRow[] = $order->getIncrementId();
                 
-                // ORDERNAME
-                $aRow[] = mb_strtoupper(
-                    $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(), 
-                    'UTF-8'
-                );
+                // ORDERNAME                
+                if($shippingAddress->getCompany()){
+                    $aRow[] = mb_strtoupper($shippingAddress->getCompany());
+                }else{                
+                    $aRow[] = mb_strtoupper(
+                        $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(), 
+                        'UTF-8'
+                    );
+                }
                 
                 // PRODUCTNO
-                $shippingMethod = $order->getShippingMethod();
-                $shippingCode = $shippingMethod;
-                if (strpos($shippingMethod, 'ls_tohome') > 0) {
-                    // $shippingCode = 'BP';
-                    $shippingCode = ''; // le bon code sera déterminé par winExpé, selon le pays de destination
+                $shippingMethod = $order->getShippingMethod();                                
+
+                //On regarde si la livraison est en France
+                $country_code = mb_strtoupper($shippingAddress->getCountry(), 'UTF-8');
+                if($country_code != 'FR'){ 
+                	$international = true;
+                }else{
+                	$international = false;
                 }
-                // if (strpos($shipping_method, 'ls_toyou') > 0) {
-                // $shipping_code = 'ADO';
-                // }
+                
+                if (strpos($shippingMethod, 'ls_tohome') > 0) {                    
+                    if($international){
+                        $aRow[] = $this->_aProductnoCorrespondance['ls_tohome_international'];
+                    }else{
+                        $aRow[] = $this->_aProductnoCorrespondance['ls_tohome'];
+                    }
+                }
+                if (strpos($shippingMethod, 'ls_fds') > 0) {
+                    if($international){
+                        $aRow[] = $this->_aProductnoCorrespondance['ls_fds_international'];
+                    }else{
+                        $aRow[] = $this->_aProductnoCorrespondance['ls_fds'];
+                    }
+                }
                 if (strpos($shippingMethod, 'ls_relay') > 0) {
-                    $shippingCode = 'SHD';
-                }
-                $aRow[] = $shippingCode;
+                    $aRow[] = $this->_aProductnoCorrespondance['ls_relay'];
+                }                
                 
                 // ORDERWEIGHTTOT
                 $totalWeight = 0;
@@ -124,10 +151,20 @@ class Addonline_Gls_Model_Export
                 foreach ($items as $item) {
                     $totalWeight += $item->getRowWeight();
                 }
-                $aRow[] = $totalWeight;
+                $aRow[] = str_pad(number_format($totalWeight, 2, '.', ''), 5, "0", STR_PAD_LEFT);
                 
                 // CONSID
                 $aRow[] = $order->getCustomerId();
+                
+                // CONTACT
+                if($shippingAddress->getCompany()){
+                    $aRow[] = mb_strtoupper(
+                        $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(), 
+                        'UTF-8'
+                    );
+                }else{
+                    $aRow[] = '';                   
+                }
                 
                 // CONTACTMAIL
                 $aRow[] = $shippingAddress->getEmail();
@@ -177,12 +214,21 @@ class Addonline_Gls_Model_Export
                 
                 // Adding the order to the export array
                 $aOrdersToExport[] = $aRow;
+                
+                //On flag la commande comme exportée
+                $order->setGlsExported(1);
+                $order->save();
             }
         
-            /*
-             * Save the file
-             */
-            $this->array2csv($aOrdersToExport, $this->filename, $delimiter, $encloser, $exportFolder);
+            
+            if(!$local){
+                /*
+                 * Save the file
+                 */
+                $this->array2csv($aOrdersToExport, $this->filename, $delimiter, $encloser, $exportFolder);
+            }else{
+                return $this->printCsv($aOrdersToExport, $this->filename, $delimiter, $encloser);
+            }
         } else {
             Mage::log("Export : " . Mage::helper('gls')->__('No Order has been selected'), null, self::LOG_FILE);
         }
@@ -225,5 +271,28 @@ class Addonline_Gls_Model_Export
         }
         fclose($df);
         return ob_get_clean();
+    }
+    
+    public function printCsv(array &$array, 
+        $filename, 
+        $delimiter = ';', 
+        $encloser = '"')
+    {
+        if (count($array) == 0) {
+            return null;
+        }
+        
+        $csvData = '';
+        foreach ($array as $row) {
+            // WINEXPE attends de l'ISO-8859-1
+            $rowData = '';
+            foreach (array_keys($row) as $key) {
+                $cellData = $encloser.iconv('UTF-8', 'ISO-8859-9', $row[$key]).$encloser.$delimiter;
+                $rowData .= $cellData;
+            }   
+            $csvData .= $rowData."\r\n";
+                
+        }
+        return $csvData;
     }
 }

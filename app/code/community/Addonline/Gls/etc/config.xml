@@ -19,7 +19,7 @@
 <config>
 	<modules>
 		<Addonline_Gls>
-			<version>1.0.3</version>
+			<version>1.0.5</version>
 			<depends>
 				<Mage_Shipping />
 			</depends>
@@ -183,6 +183,9 @@
 								<import translate="title">
 									<title>Import tracking</title>
 								</import>
+								<configuration translate="title">
+									<title>Configuration</title>
+								</configuration>
 							</children>
 						</gls>
 					</children>
@@ -195,6 +198,11 @@
 			<general>
 				<weight_unit>kg</weight_unit>
 			</general>
+			<import_export>
+				<active>0</active>
+				<export_folder>var/export/gls/</export_folder>
+				<import_folder>var/import/gls/</import_folder>
+			</import_export>
 			<bundle_product>
 				<process_children>0</process_children>
 				<load_item_options_on_parent>1</load_item_options_on_parent>
@@ -214,28 +222,37 @@
 				<livraisontohome>1</livraisontohome>
 				<configtohome><![CDATA[
 {
- "label": "Livraison à domicile",
+ "label": "Livraison à domicile en 24/48H",
  "code": "tohome_fr",
  "shipto": "FR",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 },
 {
- "label": "Livraison à domicile",
+ "label": "Livraison à domicile en 24/48H",
  "code": "tohome_eu",
  "shipto": "{address_filter.EU}",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 },
 {
- "label": "Livraison à domicile",
+ "label": "Livraison à domicile en 24/48H",
  "code": "tohome_ue",
  "shipto": "{address_filter.AF},{address_filter.AS},{address_filter.NA},{address_filter.SA},{address_filter.OC},{address_filter.AN},{address_filter.DOM},{address_filter.COM}",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 }]]></configtohome>
 				<ordertohome>1</ordertohome>
+				<livraisonfds>0</livraisonfds>
+                <configfds><![CDATA[
+{
+ "label": "En cas d’absence, choisissez où et quand vous souhaitez être livré",
+ "code": "fds_fr",
+ "shipto": "FR",
+ "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
+}]]></configfds>
+                <orderfds>2</orderfds>
 				<livraisonrelay>1</livraisonrelay>
 				<configrelay><![CDATA[
 {
- "label": "Livraison en Point Relais",
+ "label": "Retrait en Point Relais de votre choix",
  "code": "relay_fr",
  "shipto": "FR",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
@@ -245,9 +262,7 @@
 				<maxxlrelayweight>30</maxxlrelayweight>
 				<onlyxlrelay>0</onlyxlrelay>
 				<model>Addonline_Gls_Model_Carrier_ShippingMethod</model>
-				<tracking_view_url>https://gls-group.eu/EU/en/parcel-tracking?match={tracking_number}</tracking_view_url>
-				<export_folder>var/export/gls/</export_folder>
-				<import_folder>var/import/gls/</import_folder>
+				<tracking_view_url>https://gls-group.eu/EU/en/parcel-tracking?match={tracking_number}</tracking_view_url>				
 				<debug>0</debug>
 				<auto_escaping>0</auto_escaping>
 				<auto_correction>1</auto_correction>
@@ -256,4 +271,14 @@
 			</gls>
 		</carriers>
 	</default>
+	<crontab>
+		<jobs>
+			<gls>
+				<schedule>
+					<config_path>gls/import_export/cron_expression</config_path>
+				</schedule>
+				<run><model>addonline_gls/cron::import_export</model></run>
+			</gls>
+		</jobs>
+	</crontab>
 </config>

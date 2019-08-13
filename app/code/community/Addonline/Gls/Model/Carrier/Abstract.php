@@ -152,9 +152,9 @@ abstract class Addonline_Gls_Model_Carrier_Abstract extends Mage_Shipping_Model_
 			if($this->__getConfigData('livraisontohome')){
 				$allConfigurations .= $this->__getConfigData('configtohome');
 			}
-// 			if($this->__getConfigData('livraisontoyou')){
-// 				$allConfigurations .= ($allConfigurations?',':'').$this->__getConfigData('configtoyou');
-// 			}
+			if($this->__getConfigData('livraisonfds')){
+				$allConfigurations .= ($allConfigurations?',':'').$this->__getConfigData('configfds');
+			}
 			if($this->__getConfigData('livraisonrelay')){
 				$allConfigurations .= ($allConfigurations?',':'').$this->__getConfigData('configrelay');
 			}

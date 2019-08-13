@@ -34,13 +34,29 @@ class Addonline_Gls_Helper_Data extends Mage_Core_Helper_Data
     {
         return Mage::getStoreConfig('carriers/gls/relay_xl_only');
     }
-
+    
+    /**
+     * Cron activé ou non configuré en BO
+     */
+    public function getImportExportActive ()
+    {
+        return Mage::getStoreConfig('gls/import_export/active');
+    }
+    
+    /**
+     * Fréquence configurée en BO
+     */
+    public function getFrequence ()
+    {
+        return Mage::getStoreConfig('gls/import_export/frequence');
+    }
+    
     /**
      * répertoire d'export configuré en BO
      */
     public function getExportFolder ()
     {
-        return Mage::getStoreConfig('carriers/gls/export_folder');
+        return Mage::getStoreConfig('gls/import_export/export_folder');
     }
 
     /**
@@ -48,7 +64,23 @@ class Addonline_Gls_Helper_Data extends Mage_Core_Helper_Data
      */
     public function getImportFolder ()
     {
-        return Mage::getStoreConfig('carriers/gls/import_folder');
+        return Mage::getStoreConfig('gls/import_export/import_folder');
+    }
+    
+    /**
+     * Statut d'import configuré en BO
+     */
+    public function getImportStatus ()
+    {
+        return Mage::getStoreConfig('gls/import_export/import_order_status');
+    }
+    
+    /**
+     * Statut d'export configuré en BO
+     */
+    public function getExportStatus ()
+    {
+        return Mage::getStoreConfig('gls/import_export/export_order_status');
     }
 
     /**
