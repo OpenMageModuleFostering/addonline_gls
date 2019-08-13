@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,33 +19,36 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Block_Listrelay extends Mage_Core_Block_Template
 {
 
     /**
+     *
      * @var array
      */
     private $_listRelay = array();
 
     /**
      * getter listRelay
+     *
      * @return array
      */
-    public function getListRelay()
+    public function getListRelay ()
     {
         return $this->_listRelay;
     }
 
     /**
      * setter listRelay
-     * @param array $list
+     *
+     * @param array $list            
      */
-    public function setListRelay($list)
+    public function setListRelay ($list)
     {
         $this->_listRelay = $list;
     }
@@ -52,7 +56,7 @@ class Addonline_Gls_Block_Listrelay extends Mage_Core_Block_Template
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct ()
     {
         parent::__construct();
         $this->setTemplate('gls/listrelais.phtml');

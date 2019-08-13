@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,18 +19,18 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Model_Sales_Quote_Address extends Mage_Sales_Model_Quote_Address
 {
-
-    /* (non-PHPdoc)
-     * @see Mage_Sales_Model_Quote_Address::getGroupedAllShippingRates()
+    
+    /*
+     * (non-PHPdoc) @see Mage_Sales_Model_Quote_Address::getGroupedAllShippingRates()
      */
-    public function getGroupedAllShippingRates()
+    public function getGroupedAllShippingRates ()
     {
         $rates = array();
         foreach ($this->getShippingRatesCollection() as $rate) {
@@ -42,10 +43,7 @@ class Addonline_Gls_Model_Sales_Quote_Address extends Mage_Sales_Model_Quote_Add
                 $rates[$rate->getCarrier()][0]->carrier_sort_order = $rate->getCarrierInstance()->getSortOrder();
             }
         }
-        uasort($rates, array(
-            $this,
-            '_sortRates'
-        ));
+        uasort($rates, array($this,'_sortRates'));
         
         /*
          * On tri selon les paramètres du Back office

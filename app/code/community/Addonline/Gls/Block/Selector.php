@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
 {
@@ -29,16 +30,17 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * adresse de livraison
      */
-    private function _getShippingAddress()
+    private function _getShippingAddress ()
     {
         return Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress();
     }
 
     /**
      * methode de livraison
+     * 
      * @return string
      */
-    public function getAddressShippingMethod()
+    public function getAddressShippingMethod ()
     {
         if ($adress = $this->_getShippingAddress()) {
             return $adress->getShippingMethod();
@@ -50,7 +52,7 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * rue
      */
-    public function getShippingStreet()
+    public function getShippingStreet ()
     {
         return $this->_getShippingAddress()->getStreetFull();
     }
@@ -58,7 +60,7 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * code postal
      */
-    public function getShippingPostcode()
+    public function getShippingPostcode ()
     {
         return $this->_getShippingAddress()->getPostcode();
     }
@@ -66,7 +68,7 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * ville
      */
-    public function getShippingCity()
+    public function getShippingCity ()
     {
         return $this->_getShippingAddress()->getCity();
     }
@@ -74,7 +76,7 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * pays
      */
-    public function getShippingCountry()
+    public function getShippingCountry ()
     {
         return $this->_getShippingAddress()->getCountry();
     }
@@ -82,7 +84,7 @@ class Addonline_Gls_Block_Selector extends Mage_Core_Block_Template
     /**
      * telephone
      */
-    public function getTelephone()
+    public function getTelephone ()
     {
         return $this->_getShippingAddress()->getTelephone();
     }

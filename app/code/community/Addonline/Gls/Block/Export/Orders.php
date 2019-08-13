@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Block_Export_Orders extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
@@ -29,7 +30,7 @@ class Addonline_Gls_Block_Export_Orders extends Mage_Adminhtml_Block_Widget_Grid
     /**
      * Enter Description here
      */
-    public function __construct()
+    public function __construct ()
     {
         $this->_blockGroup = 'gls';
         $this->_controller = 'export_orders';

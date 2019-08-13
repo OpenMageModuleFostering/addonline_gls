@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,23 +19,26 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Model_Observer extends Varien_Object
 {
 
-    public function __construct()
-    {}
+    public function __construct ()
+    {
+        
+    }
 
-    public function checkoutEventGlsdata($observer)
+    public function checkoutEventGlsdata ($observer)
     {
         $quote = $observer->getEvent()->getQuote();
         $request = Mage::app()->getRequest();
         
-        // si on n'a pas le paramètre shipping_method c'est qu'on n'est pas sur la requête de mise à jour du mode de livraison
+        // si on n'a pas le paramètre shipping_method c'est qu'on n'est pas sur la requête de mise à jour du mode de
+        // livraison
         // dans ce cas on ne change rien
         if (! $request->getParam('shipping_method')) {
             return $this;
@@ -46,33 +50,37 @@ class Addonline_Gls_Model_Observer extends Varien_Object
         return $this;
     }
 
-    public function setShippingRelayAddress($observer)
+    public function setShippingRelayAddress ($observer)
     {
-        $shipping_data = Mage::getSingleton('checkout/session')->getData('gls_shipping_relay_data');
+        $shippingData = Mage::getSingleton('checkout/session')->getData('gls_shipping_relay_data');
         $quote = $observer->getEvent()->getQuote();
         $shippingAddress = $quote->getShippingAddress();
         $billingAddress = $quote->getBillingAddress();
         $shippingMethod = $shippingAddress->getShippingMethod();
         if (strpos($shippingMethod, 'gls_relay') !== false) {
             $request = Mage::app()->getRequest();
-            // si on a le paramètre shipping_method c'est qu'on n'est pas sur la requête de mise à jour du mode de livraison :
+            // si on a le paramètre shipping_method c'est qu'on n'est pas sur la requête de mise à jour du mode de
+            // livraison :
             // il faut mettre à jour l'addresse de livraison si on a le mode de livraison relais
-            if ($shipping_data && $request->getParam('shipping_method')) {
-                Mage::getSingleton('checkout/session')->setData('gls_shipping_warnbyphone', $shipping_data['warnbyphone']);
-                Mage::getSingleton('checkout/session')->setData('gls_relay_id', $shipping_data['relayId']);
-                $shippingAddress->setData('company', $shipping_data['name']);
-                $shippingAddress->setData('street', $shipping_data['address']);
-                $shippingAddress->setData('city', $shipping_data['city']);
-                $shippingAddress->setData('postcode', $shipping_data['zipcode']);
+            if ($shippingData && $request->getParam('shipping_method')) {
+                Mage::getSingleton('checkout/session')->setData(
+                    'gls_shipping_warnbyphone', 
+                    $shippingData['warnbyphone']
+                );
+                Mage::getSingleton('checkout/session')->setData('gls_relay_id', $shippingData['relayId']);
+                $shippingAddress->setData('company', $shippingData['name']);
+                $shippingAddress->setData('street', $shippingData['address']);
+                $shippingAddress->setData('city', $shippingData['city']);
+                $shippingAddress->setData('postcode', $shippingData['zipcode']);
                 $shippingAddress->setData('save_in_address_book', 0);
-                if ($shipping_data['phone']) {
-                    $shippingAddress->setData('telephone', $shipping_data['phone']);
+                if ($shippingData['phone']) {
+                    $shippingAddress->setData('telephone', $shippingData['phone']);
                 } else {
                     $shippingAddress->setData('telephone', $shippingAddress->getData('telephone'));
                 }
             }
         } else {
-            if ($shipping_data) {
+            if ($shippingData) {
                 // Si l'adresse était une adresse de relais colis (on a les données en session) :
                 // on réinitialise l'adresse de livraison avec l'adresse de facturation
                 $shippingAddress->setData('prefix', $billingAddress->getData('prefix'));
@@ -88,7 +96,7 @@ class Addonline_Gls_Model_Observer extends Varien_Object
         }
     }
 
-    public function addGlsInformationsToOrder($observer)
+    public function addGlsInformationsToOrder ($observer)
     {
         try {
             // puis on vide les données en session
@@ -108,7 +116,7 @@ class Addonline_Gls_Model_Observer extends Varien_Object
                     ->save();
             }
         } catch (Exception $e) {
-            Mage::Log('Failed to save GLS data : ' . print_r($shippingData, true));
+            Mage::Log('Failed to save GLS data : ' . print_r($shippingData, true), null, 'gls.log');
         }
     }
 }

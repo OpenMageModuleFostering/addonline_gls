@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_ExportController extends Mage_Adminhtml_Controller_Action
 {
@@ -29,7 +30,7 @@ class Addonline_Gls_ExportController extends Mage_Adminhtml_Controller_Action
     /**
      * Constructor
      */
-    protected function _construct()
+    protected function _construct ()
     {
         $this->setUsedModuleName('Addonline_Gls');
     }
@@ -37,19 +38,20 @@ class Addonline_Gls_ExportController extends Mage_Adminhtml_Controller_Action
     /**
      * Main action : show orders list
      */
-    public function indexAction()
+    public function indexAction ()
     {
         $this->loadLayout()
             ->_setActiveMenu('gls/export')
-            ->_addContent($this->getLayout()
-            ->createBlock('gls/export_orders'))
+            ->_addContent(
+                $this->getLayout()->createBlock('gls/export_orders')
+            )
             ->renderLayout();
     }
 
     /**
      * Export Action : Generates a CSV file to download
      */
-    public function exportAction()
+    public function exportAction ()
     {
         /* get the orders */
         $orderIds = $this->getRequest()->getPost('order_ids');

@@ -19,7 +19,7 @@
 <config>
 	<modules>
 		<Addonline_Gls>
-			<version>1.0.1</version>
+			<version>1.0.3</version>
 			<depends>
 				<Mage_Shipping />
 			</depends>
@@ -31,6 +31,11 @@
 			<gls>
 				<class>Addonline_Gls_Block</class>
 			</gls>
+			<onestepcheckout>
+                <rewrite>
+                    <checkout>Addonline_Gls_Block_OneStepCheckout_Checkout</checkout>
+                </rewrite>
+            </onestepcheckout>
 		</blocks>
 		<helpers>
 			<gls>

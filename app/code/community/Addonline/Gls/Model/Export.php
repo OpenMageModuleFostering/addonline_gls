@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Model_Export
 {
@@ -36,7 +37,7 @@ class Addonline_Gls_Model_Export
 
     public $fileCharset;
 
-    public function run()
+    public function run ()
     {
         Mage::log('run GLS export', null, self::LOG_FILE);
         if (! Mage::getStoreConfig('carrier/gls/export')) {
@@ -44,7 +45,7 @@ class Addonline_Gls_Model_Export
         }
     }
 
-    public function export($collection)
+    public function export ($collection)
     {
         if ($collection->getSize() > 0) {
             
@@ -67,21 +68,21 @@ class Addonline_Gls_Model_Export
             
             // HEADERS of the file
             $aheaders = array(
-                'ORDERID',
-                'ORDERNAME',
-                'PRODUCTNO',
-                'ORDERWEIGHTTOT',
-                'CONSID',
-                'CONTACTMAIL',
-                'CONTACTMOBILE',
-                'CONTACTPHONE',
-                'STREET1',
-                'STREET2',
-                'STREET3',
-                'COUNTRYCODE',
-                'CITY',
-                'ZIPCODE',
-                'REFPR'
+                    'ORDERID',
+                    'ORDERNAME',
+                    'PRODUCTNO',
+                    'ORDERWEIGHTTOT',
+                    'CONSID',
+                    'CONTACTMAIL',
+                    'CONTACTMOBILE',
+                    'CONTACTPHONE',
+                    'STREET1',
+                    'STREET2',
+                    'STREET3',
+                    'COUNTRYCODE',
+                    'CITY',
+                    'ZIPCODE',
+                    'REFPR'
             );
             $aOrdersToExport[] = $aheaders;
             
@@ -97,30 +98,33 @@ class Addonline_Gls_Model_Export
                 $aRow[] = $order->getIncrementId();
                 
                 // ORDERNAME
-                $aRow[] = mb_strtoupper($shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(), 'UTF-8');
+                $aRow[] = mb_strtoupper(
+                    $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(), 
+                    'UTF-8'
+                );
                 
                 // PRODUCTNO
-                $shipping_method = $order->getShippingMethod();
-                $shipping_code = $shipping_method;
-                if (strpos($shipping_method, 'ls_tohome') > 0) {
-                    // $shipping_code = 'BP';
-                    $shipping_code = ''; // le bon code sera déterminé par winExpé, selon le pays de destination
+                $shippingMethod = $order->getShippingMethod();
+                $shippingCode = $shippingMethod;
+                if (strpos($shippingMethod, 'ls_tohome') > 0) {
+                    // $shippingCode = 'BP';
+                    $shippingCode = ''; // le bon code sera déterminé par winExpé, selon le pays de destination
                 }
                 // if (strpos($shipping_method, 'ls_toyou') > 0) {
                 // $shipping_code = 'ADO';
                 // }
-                if (strpos($shipping_method, 'ls_relay') > 0) {
-                    $shipping_code = 'SHD';
+                if (strpos($shippingMethod, 'ls_relay') > 0) {
+                    $shippingCode = 'SHD';
                 }
-                $aRow[] = $shipping_code;
+                $aRow[] = $shippingCode;
                 
                 // ORDERWEIGHTTOT
-                $total_weight = 0;
+                $totalWeight = 0;
                 $items = $order->getAllItems();
                 foreach ($items as $item) {
-                    $total_weight += $item->getRowWeight();
+                    $totalWeight += $item->getRowWeight();
                 }
-                $aRow[] = $total_weight;
+                $aRow[] = $totalWeight;
                 
                 // CONSID
                 $aRow[] = $order->getCustomerId();
@@ -135,8 +139,10 @@ class Addonline_Gls_Model_Export
                 $aRow[] = $shippingAddress->getTelephone();
                 
                 // Repartition de l'adresse en fonction des tailles.
-                if (strlen($shippingAddress->getStreet(1)) > 35 || strlen($shippingAddress->getStreet(2)) > 35 || strlen($shippingAddress->getStreet(3)) > 35) {
-                    $street = $shippingAddress->getStreet(1) . ' ' . $shippingAddress->getStreet(2) . ' ' . $shippingAddress->getStreet(3);
+                if (strlen($shippingAddress->getStreet(1)) > 35 || strlen($shippingAddress->getStreet(2)) > 35 ||
+                     strlen($shippingAddress->getStreet(3)) > 35) {
+                    $street = $shippingAddress->getStreet(1) . ' ' . $shippingAddress->getStreet(2) . ' ' .
+                        $shippingAddress->getStreet(3);
                     $street = wordwrap($street, 35, ';', true);
                     $aStreet = explode(';', $street);
                     
@@ -172,7 +178,7 @@ class Addonline_Gls_Model_Export
                 // Adding the order to the export array
                 $aOrdersToExport[] = $aRow;
             }
-            
+        
             /*
              * Save the file
              */
@@ -181,8 +187,8 @@ class Addonline_Gls_Model_Export
             Mage::log("Export : " . Mage::helper('gls')->__('No Order has been selected'), null, self::LOG_FILE);
         }
     }
-
-    private function udate($format = 'u', $utimestamp = null)
+    
+    private function udate ($format = 'u', $utimestamp = null)
     {
         if (is_null($utimestamp))
             $utimestamp = microtime(true);
@@ -192,8 +198,12 @@ class Addonline_Gls_Model_Export
         $milliseconds = substr($milliseconds, 0, 2);
         return date(preg_replace('`(?<!\\\\)u`', $milliseconds, $format), $timestamp);
     }
-
-    private function array2csv(array &$array, $filename, $delimiter = ';', $encloser = '"', $folder = 'var/export/gls/')
+    
+    private function array2csv (array &$array, 
+        $filename, 
+        $delimiter = ';', 
+        $encloser = '"', 
+        $folder = 'var/export/gls/')
     {
         if (count($array) == 0) {
             return null;

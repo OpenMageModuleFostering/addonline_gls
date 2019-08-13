@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,17 +19,17 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Model_Service
 {
 
     protected $_urlWsdl;
 
-    public function getUrlWsdl()
+    public function getUrlWsdl ()
     {
         if (! $this->_urlWsdl) {
             $this->_urlWsdl = "http://www.gls-group.eu/276-I-PORTAL-WEBSERVICE/services/ParcelShopSearch/wsdl/2010_01_ParcelShopSearch.wsdl";
@@ -36,7 +37,7 @@ class Addonline_Gls_Model_Service
         return $this->_urlWsdl;
     }
 
-    public function getRelayPointsForZipCode($zipcode, $country)
+    public function getRelayPointsForZipCode ($zipcode, $country)
     {
         $login = Mage::getStoreConfig('carriers/gls/usernamews');
         $mdp = Mage::getStoreConfig('carriers/gls/passws');
@@ -46,37 +47,50 @@ class Addonline_Gls_Model_Service
         else
             require_once dirname(__FILE__) . DS . 'Addonline_Gls_Model_Webservice_PointsRelaisWSService.php';
         
-        $pointsRelaisWSService = new PointsRelaisWSService(array(
-            'trace' => TRUE
-        ), $this->getUrlWsdl());
-        // $aParameters = array('UserName' =>$login,'Password' =>$mdp,'ZipCode' => $zipcode,'Country' => $country);
-        
-        $aParameters = array(
-            'Credentials' => array(
-                'UserName' => $login,
-                'Password' => $mdp
-            ),
-            'Address' => array(
-                'Name1' => '',
-                'Name2' => '',
-                'Name3' => '',
-                'Street1' => '',
-                'BlockNo1' => '',
-                'Street2' => '',
-                'BlockNo2' => '',
-                'ZipCode' => $zipcode,
-                'City' => '',
-                'Province' => '',
-                'Country' => $country
-            )
-        );
-        
         try {
+            $pointsRelaisWSService = new PointsRelaisWSService(
+                array('trace' => TRUE), 
+                $this->getUrlWsdl()
+            );
+            // $aParameters = array('UserName' =>$login,'Password' =>$mdp,'ZipCode' => $zipcode,'Country' => $country);
+            
+            $aParameters = array(
+                    'Credentials' => array('UserName' => $login,'Password' => $mdp
+                    ),
+                    'Address' => array(
+                            'Name1' => '',
+                            'Name2' => '',
+                            'Name3' => '',
+                            'Street1' => '',
+                            'BlockNo1' => '',
+                            'Street2' => '',
+                            'BlockNo2' => '',
+                            'ZipCode' => $zipcode,
+                            'City' => '',
+                            'Province' => '',
+                            'Country' => $country
+                    )
+            );
+            
             $result = $pointsRelaisWSService->findRelayPoints($aParameters);
             return $result;
         } catch (SoapFault $fault) {
-            var_dump($fault);
-            return false;
+            /* On va flusher le cache wsdl, car parfois une mise à jour du WS peut nécéssiter un flush de ce cache */
+            foreach (glob(sys_get_temp_dir() . DS . 'wsdl*') as $filename) {
+                if (strpos(file_get_contents($filename), $this->getUrlWsdl()) !== false) {
+                    unlink($filename);
+                }
+            }
+            if (isset($pointRetraitServiceWSService)) {
+                Mage::log('Request ' . $pointRetraitServiceWSService->__getLastRequest(), null, 'gls.log');
+                Mage::log('Response ' . $pointRetraitServiceWSService->__getLastResponse(), null, 'gls.log');
+            }
+            Mage::log($fault, null, 'gls.log');
+            $result = new Varien_Object();
+            $result->exitCode = new Varien_Object();
+            $result->exitCode->ErrorCode = 500;
+            $result->exitCode->ErrorDscr = 'Erreur WebService : ' . $fault->faultcode . ' ' . $fault->faultstring;
+            return $result;
         }
     }
 }

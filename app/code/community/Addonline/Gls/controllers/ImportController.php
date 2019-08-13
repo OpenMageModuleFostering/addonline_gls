@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_ImportController extends Mage_Adminhtml_Controller_Action
 {
@@ -29,7 +30,7 @@ class Addonline_Gls_ImportController extends Mage_Adminhtml_Controller_Action
     /**
      * Constructor
      */
-    protected function _construct()
+    protected function _construct ()
     {
         $this->setUsedModuleName('Addonline_Gls');
     }
@@ -37,27 +38,31 @@ class Addonline_Gls_ImportController extends Mage_Adminhtml_Controller_Action
     /**
      * Main action : show import form
      */
-    public function indexAction()
+    public function indexAction ()
     {
         $this->loadLayout()
             ->_setActiveMenu('gls/import')
-            ->_addContent($this->getLayout()
-            ->createBlock('gls/import_form'))
-            ->renderLayout();
+            ->_addContent(
+                $this->getLayout()->createBlock('gls/import_form')
+            )->renderLayout();
     }
 
     /**
      * Import Action
      */
-    public function importAction()
+    public function importAction ()
     {
         $import = Mage::getModel('gls/import');
-        $nbr_imported = $import->import();
+        $nbrImported = $import->import();
         
-        if ($nbr_imported) {
-            Mage::getSingleton('adminhtml/session')->addSuccess($nbr_imported . ' ' . $this->__('Orders have been imported'));
+        if ($nbrImported) {
+            Mage::getSingleton('adminhtml/session')->addSuccess(
+                $nbrImported . ' ' . $this->__('Orders have been imported')
+            );
         } else {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('No orders to import in the folder ') . Mage::helper('gls')->getImportFolder());
+            Mage::getSingleton('adminhtml/session')->addError(
+                $this->__('No orders to import in the folder ') . Mage::helper('gls')->getImportFolder()
+            );
         }
         $this->_redirect('*/*/');
     }

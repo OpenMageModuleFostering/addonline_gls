@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014 GLS
  *
@@ -18,10 +19,10 @@
 /**
  * Addonline_Gls
  *
- * @category    Addonline
- * @package     Addonline_Gls
- * @copyright   Copyright (c) 2014 GLS
- * @author 	    Addonline (http://www.addonline.fr)
+ * @category Addonline
+ * @package Addonline_Gls
+ * @copyright Copyright (c) 2014 GLS
+ * @author Addonline (http://www.addonline.fr)
  */
 class Addonline_Gls_Model_Import
 {
@@ -36,7 +37,7 @@ class Addonline_Gls_Model_Import
 
     public $fileCharset;
 
-    public function run()
+    public function run ()
     {
         Mage::log('run GLS import', null, self::LOG_FILE);
         
@@ -45,7 +46,7 @@ class Addonline_Gls_Model_Import
         }
     }
 
-    public function import()
+    public function import ()
     {
         $importFolder = Mage::helper('gls')->getImportFolder();
         if (! is_dir($importFolder)) {
@@ -56,7 +57,8 @@ class Addonline_Gls_Model_Import
         
         // Parcour du dossier
         while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..' && ! is_dir($importFolder . $file) && strpos($file, 'GlsWinExpe6_') !== FALSE) {
+            if ($file != '.' && $file != '..' && ! is_dir($importFolder . $file) &&
+                 strpos($file, 'GlsWinExpe6_') !== FALSE) {
                 $aOrdersUpdated = array();
                 // Parcour du fichier
                 if (($handle = fopen($importFolder . DS . $file, "r")) !== FALSE) {
@@ -96,7 +98,15 @@ class Addonline_Gls_Model_Import
                                 $count --;
                             }
                         } catch (Exception $e) {
-                            Mage::log(Mage::helper('gls')->__('Shipment creation error for Order %s : %s', $key, $e->getMessage()), null, self::LOG_FILE);
+                            Mage::log(
+                                Mage::helper('gls')->__(
+                                    'Shipment creation error for Order %s : %s', 
+                                    $key, 
+                                    $e->getMessage()
+                                ),
+                                null, 
+                                self::LOG_FILE
+                            );
                         }
                     }
                     
@@ -113,7 +123,7 @@ class Addonline_Gls_Model_Import
         return $count;
     }
 
-    private function _createShipment($order, $trackcode)
+    private function _createShipment ($order, $trackcode)
     {
         if ($order->canShip()) {
             /**
@@ -143,9 +153,9 @@ class Addonline_Gls_Model_Import
             $shipment->register();
             
             $arrTracking = array(
-                'carrier_code' => $order->getShippingCarrier()->getCarrierCode(),
-                'title' => $order->getShippingCarrier()->getConfigData('title'),
-                'number' => $trackcode
+                    'carrier_code' => $order->getShippingCarrier()->getCarrierCode(),
+                    'title' => $order->getShippingCarrier()->getConfigData('title'),
+                    'number' => $trackcode
             );
             
             $track = Mage::getModel('sales/order_shipment_track')->addData($arrTracking);
@@ -158,12 +168,18 @@ class Addonline_Gls_Model_Import
             $this->_saveOrder($order);
             return 1;
         } else {
-            $this->addError(Mage::helper('gls')->__('Order %s can not be shipped or has already been shipped', $order->getRealOrderId()));
+            $this->addError(
+                Mage::helper('gls')->__(
+                    'Order %s can not be shipped or has already been shipped', 
+                    $order->getRealOrderId()
+                )
+            );
             return 0;
         }
     }
 
-    protected function _saveShipment(Mage_Sales_Model_Order_Shipment $shipment, Mage_Sales_Model_Order $order, $customerEmailComments = '')
+    protected function _saveShipment (Mage_Sales_Model_Order_Shipment $shipment, Mage_Sales_Model_Order $order, 
+        $customerEmailComments = '')
     {
         $shipment->getOrder()->setIsInProcess(true);
         $transactionSave = Mage::getModel('core/resource_transaction')->addObject($shipment)
@@ -179,7 +195,7 @@ class Addonline_Gls_Model_Import
         return $this;
     }
 
-    protected function _saveOrder(Mage_Sales_Model_Order $order)
+    protected function _saveOrder (Mage_Sales_Model_Order $order)
     {
         // $order->setData('state', Mage_Sales_Model_Order::STATE_COMPLETE);
         // $order->setData('status', Mage_Sales_Model_Order::STATE_COMPLETE);
@@ -188,7 +204,7 @@ class Addonline_Gls_Model_Import
         return $this;
     }
 
-    protected function addError($message)
+    protected function addError ($message)
     {
         Mage::getSingleton('adminhtml/session')->addError($message);
     }

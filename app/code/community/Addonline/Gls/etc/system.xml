@@ -21,7 +21,7 @@
 		<carriers>
 			<groups>
 				<gls translate="label" module="gls">
-					<label>GLS</label>
+					<label>GLS, votre partenaire transport</label>
 					<frontend_type>text</frontend_type>
 					<sort_order>18</sort_order>
 					<show_in_default>1</show_in_default>

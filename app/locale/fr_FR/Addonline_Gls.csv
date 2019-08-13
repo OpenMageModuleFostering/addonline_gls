@@ -39,8 +39,10 @@
 "Import tracking","Importer les numéros de suivi"
 "{debug_help}","Affichage du debug sur le panier lors d'une estimation de livraison"
 "{importexport_help}","Après enregistrement du changement de valeur, il faut se déconnecter et se reconnecter afin de faire apparaitre le nouveau menu"
-"Your parameters for GSL Webservice might be wrong, or the webservice is down","Vos paramètres pour le webservice GSL sont éronnés, ou alors le webservice ne répond pas"
-
+"Authentification error GLS webservice, login or password might be wrong","Erreur authentification Webservice GLS, Login ou mot de passe incorrects"
+"Error call GLS webservice, it might be down, see var/log/gls.log","Erreur appel webservice GLS, il doit être hors service, voir var/log/gls.log"
+"No ParcelShop fit your search","Aucun relais ne correspond à votre recherche"
+ 
 # app/code/local/Addonline/Gls/Block/Adminhtml/Os2/Editor.php
 	"New shipping method","Nouvelle méthode de livraison"
 	"Remove","Supprimer"

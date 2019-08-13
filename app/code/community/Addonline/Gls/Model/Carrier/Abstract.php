@@ -158,7 +158,7 @@ abstract class Addonline_Gls_Model_Carrier_Abstract extends Mage_Shipping_Model_
 			if($this->__getConfigData('livraisonrelay')){
 				$allConfigurations .= ($allConfigurations?',':'').$this->__getConfigData('configrelay');
 			}
-			Mage::log($allConfigurations);
+			//Mage::log($allConfigurations, null, 'gls.log');
 			$this->_helper = new OwebiaShippingHelper_GLS(
 				$allConfigurations,
 				true
