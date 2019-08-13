@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright (c) 2014 GLS
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * It is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Addonline
+ * @package     Addonline_Gls
+ * @copyright   Copyright (c) 2014 GLS
+ * @author 	    Addonline (http://www.addonline.fr)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<div id="layer_gls_wrapper">
+	<div>
+		<h3><?php echo __("Choose Mondial Relay ParcelShop")?></h3>
+		<a class="close layer_gls_close"></a>
+		<div class="contenu">
+			<div id="gls_headers">
+				<div class="left_gls">
+				    <span><?php echo __("Your zipcode")?></span> <input type="text"
+						id="cp_recherche"
+						value="<?php echo $this->getShippingPostcode() ?>" />
+				    <span><?php echo __("Your address")?></span> <input type="text"
+						id="adresse_recherche"
+						value="<?php echo $this->getShippingStreet() ?>" />
+					<span><?php echo __("Your city")?></span> <input type="text"
+						id="city_recherche"
+						value="<?php echo $this->getShippingCity() ?>" />
+					<button id="cp_recherche_bouton" onclick="geocodeGLSAdresse()"><?php echo $this->helper('gls')->__("Search")?></button>
+				</div>
+				<div class="right_gls">
+					<?php
+    $smsNotification = strpos($this->getTelephone(), "06") === 0 || strpos($this->getTelephone(), "07") === 0;
+    ?>
+					<label><input type="checkbox" id="sms_checkbox"
+						<?php if($smsNotification) {?> checked="checked" <?php }?> /> <?php echo __("To receive an sms when delivery is done")?></label>
+					<input type="text" id="num_telephone"
+						class="valid-telephone-portable" <?php if($smsNotification) {?>
+						value="<?php echo $this->getTelephone(); ?><?php }?>" />
+				</div>
+			</div>
+			<div id="col_gauche_gls">
+				<div id="map_gls"></div>
+			</div>
+			<div id="col_droite_gls"></div>
+		</div>
+	</div>
+</div>

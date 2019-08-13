@@ -42,7 +42,8 @@ class Addonline_Gls_Model_Export
             'ls_tohome_international' => 01,
             'ls_fds' => 18,
             'ls_fds_international' => 19,
-            'ls_relay' => 17
+            'ls_relay' => 17,
+            'ls_express' => 16,
     );
 
     public function run ()
@@ -143,8 +144,12 @@ class Addonline_Gls_Model_Export
                 }
                 if (strpos($shippingMethod, 'ls_relay') > 0) {
                     $aRow[] = $this->_aProductnoCorrespondance['ls_relay'];
-                }                
-                
+                }
+
+                if (strpos($shippingMethod, 'ls_express') > 0) {
+                    $aRow[] = $this->_aProductnoCorrespondance['ls_express'];
+                }
+
                 // ORDERWEIGHTTOT
                 $totalWeight = 0;
                 $items = $order->getAllItems();
@@ -163,7 +168,13 @@ class Addonline_Gls_Model_Export
                         'UTF-8'
                     );
                 }else{
-                    $aRow[] = '';                   
+                    if (strpos($shippingMethod, 'ls_express') > 0) {
+                        /* If Shipping method is express, CONTACT field is always FIRSTNAME - LASTNAME */
+                        $aRow[] = mb_strtoupper($shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname(),
+                            'UTF-8');
+                    } else {
+                        $aRow[] = '';
+                    }
                 }
                 
                 // CONTACTMAIL

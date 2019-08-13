@@ -19,208 +19,214 @@
 <config>
 	<modules>
 		<Addonline_Gls>
-			<version>1.0.5</version>
+			<version>1.1.0</version>
 			<depends>
 				<Mage_Shipping />
 			</depends>
 		</Addonline_Gls>
 	</modules>
 
-	<global>
-		<blocks>
-			<gls>
-				<class>Addonline_Gls_Block</class>
-			</gls>
-			<onestepcheckout>
+    <global>
+        <blocks>
+            <gls>
+                <class>Addonline_Gls_Block</class>
+            </gls>
+            <onestepcheckout>
                 <rewrite>
                     <checkout>Addonline_Gls_Block_OneStepCheckout_Checkout</checkout>
                 </rewrite>
             </onestepcheckout>
-		</blocks>
-		<helpers>
-			<gls>
-				<class>Addonline_Gls_Helper</class>
-			</gls>
-			<onestepcheckout>
-				<rewrite>
-					<checkout>Addonline_Gls_Helper_OneStepCheckout_Checkout</checkout>
-				</rewrite>
-			</onestepcheckout>
-		</helpers>
-		<!-- <resources> <gls_setup> <setup> <module>Addonline_Gls</module> <class>Mage_Sales_Model_Mysql4_Setup</class> 
-			</setup> </gls_setup> </resources> -->
-		<models>
-			<gls>
-				<class>Addonline_Gls_Model</class>
-			</gls>
-			<sales>
-				<rewrite>
-					<quote_address>Addonline_Gls_Model_Sales_Quote_Address</quote_address>
-				</rewrite>
-			</sales>
-		</models>
-		<resources>
-			<gls_setup>
-				<setup>
-					<module>Addonline_Gls</module>
-					<class>Mage_Sales_Model_Mysql4_Setup</class>
-				</setup>
-			</gls_setup>
-		</resources>
-		<events>
-			<!-- <sales_quote_collect_totals_before> <observers> <Addonline_Gls_Model_Observer> 
-				<type>singleton</type> <class>gls/observer</class> <method>checkoutEventGlsdata</method> 
-				</Addonline_Gls_Model_Observer> </observers> </sales_quote_collect_totals_before> -->
-			<sales_quote_collect_totals_before>
-				<observers>
-					<Addonline_Gls_Model_Observer>
-						<type>singleton</type>
-						<class>gls/observer</class>
-						<method>setShippingRelayAddress</method>
-					</Addonline_Gls_Model_Observer>
-				</observers>
-			</sales_quote_collect_totals_before>
-			<checkout_type_onepage_save_order_after>
-				<observers>
-					<Addonline_Gls_Model_Observer>
-						<type>singleton</type>
-						<class>gls/observer</class>
-						<method>addGlsInformationsToOrder</method>
-					</Addonline_Gls_Model_Observer>
-				</observers>
-			</checkout_type_onepage_save_order_after>
-		</events>
-	</global>
-	<frontend>
-		<layout>
-			<updates>
-				<gls module="Addonline_Gls">
-					<file>gls.xml</file>
-				</gls>
-			</updates>
-		</layout>
-		<secure_url>
-			<gls>/gls/ajax/</gls>
-		</secure_url>
-		<translate>
-			<modules>
-				<Addonline_Gls>
-					<files>
-						<shipping>Mage_Shipping.csv</shipping>
-						<default>Addonline_Gls.csv</default>
-					</files>
-				</Addonline_Gls>
-			</modules>
-		</translate>
-	</frontend>
-	<admin>
-		<routers>
-			<gls>
-				<use>admin</use>
-				<args>
-					<module>Addonline_Gls</module>
-					<frontName>gls</frontName>
-				</args>
-			</gls>
-		</routers>
-	</admin>
-	<adminhtml>
-		<!-- Magento lower than 1.4.0 -->
-		<translate>
-			<modules>
-				<Addonline_Gls>
-					<files>
-						<shipping>Mage_Shipping.csv</shipping>
-						<gls>Addonline_Gls.csv</gls>
-					</files>
-				</Addonline_Gls>
-			</modules>
-		</translate>
-		<menu>
-			<gls module="gls">
-				<title>GLS Import/Export</title>
-				<sort_order>99</sort_order>
-				<children>
-					<export translate="title" module="gls">
-						<title>Export orders</title>
-						<sort_order>0</sort_order>
-						<action>gls/export</action>
-					</export>
-					<import translate="title" module="gls">
-						<title>Import tracking</title>
-						<sort_order>1</sort_order>
-						<action>gls/import</action>
-					</import>
-				</children>
-				<depends>
-					<config>carriers/gls/importexport</config>
-				</depends>
-			</gls>
-		</menu>
-		<acl>
-			<resources>
-				<admin>
-					<children>
-						<system>
-							<children>
-								<config>
-									<children>
-										<gls>
-											<title>GLS Section</title>
-											<sort_order>100</sort_order>
-										</gls>
-									</children>
-								</config>
-							</children>
-						</system>
-						<gls translate="title" module="gls">
-							<title>GLS Import/Export</title>
-							<sort_order>200</sort_order>
-							<children>
-								<export translate="title">
-									<title>Export orders</title>
-								</export>
-								<import translate="title">
-									<title>Import tracking</title>
-								</import>
-								<configuration translate="title">
-									<title>Configuration</title>
-								</configuration>
-							</children>
-						</gls>
-					</children>
-				</admin>
-			</resources>
-		</acl>
-	</adminhtml>
-	<default>
-		<gls>
-			<general>
-				<weight_unit>kg</weight_unit>
-			</general>
-			<import_export>
-				<active>0</active>
-				<export_folder>var/export/gls/</export_folder>
-				<import_folder>var/import/gls/</import_folder>
-			</import_export>
-			<bundle_product>
-				<process_children>0</process_children>
-				<load_item_options_on_parent>1</load_item_options_on_parent>
-				<load_item_data_on_parent>0</load_item_data_on_parent>
-				<load_product_data_on_parent>0</load_product_data_on_parent>
-			</bundle_product>
-			<configurable_product>
-				<load_item_options_on_parent>1</load_item_options_on_parent>
-				<load_item_data_on_parent>1</load_item_data_on_parent>
-				<load_product_data_on_parent>0</load_product_data_on_parent>
-			</configurable_product>
-		</gls>
-		<carriers>
-			<gls>
-				<title>GLS</title>
-				<active>0</active>
-				<livraisontohome>1</livraisontohome>
-				<configtohome><![CDATA[
+        </blocks>
+        <helpers>
+            <gls>
+                <class>Addonline_Gls_Helper</class>
+            </gls>
+            <onestepcheckout>
+                <rewrite>
+                    <checkout>Addonline_Gls_Helper_OneStepCheckout_Checkout</checkout>
+                </rewrite>
+            </onestepcheckout>
+        </helpers>
+        <!-- <resources> <gls_setup> <setup> <module>Addonline_Gls</module> <class>Mage_Sales_Model_Mysql4_Setup</class> 
+        </setup> </gls_setup> </resources> -->
+        <models>
+            <gls>
+                <class>Addonline_Gls_Model</class>
+                <resourceModel>gls_agencies_list</resourceModel>
+            </gls>
+            <sales>
+                <rewrite>
+                    <quote_address>Addonline_Gls_Model_Sales_Quote_Address</quote_address>
+                </rewrite>
+            </sales>
+            <gls_agencies_list>
+                <class>Addonline_Gls_Model_Agencies</class>
+                <entities>
+                    <gls>
+                        <table>atest4242</table>
+                    </gls>
+                </entities>
+            </gls_agencies_list>
+        </models>
+        <resources>
+            <gls_setup>
+                <setup>
+                    <module>Addonline_Gls</module>
+                    <class>Mage_Sales_Model_Mysql4_Setup</class>
+                </setup>
+            </gls_setup>
+        </resources>
+        <events>
+            <!-- <sales_quote_collect_totals_before> <observers> <Addonline_Gls_Model_Observer> 
+            <type>singleton</type> <class>gls/observer</class> <method>checkoutEventGlsdata</method> 
+            </Addonline_Gls_Model_Observer> </observers> </sales_quote_collect_totals_before> -->
+            <sales_quote_collect_totals_before>
+                <observers>
+                    <Addonline_Gls_Model_Observer>
+                        <type>singleton</type>
+                        <class>gls/observer</class>
+                        <method>setShippingRelayAddress</method>
+                    </Addonline_Gls_Model_Observer>
+                </observers>
+            </sales_quote_collect_totals_before>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <Addonline_Gls_Model_Observer>
+                        <type>singleton</type>
+                        <class>gls/observer</class>
+                        <method>addGlsInformationsToOrder</method>
+                    </Addonline_Gls_Model_Observer>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+        </events>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <gls module="Addonline_Gls">
+                    <file>gls.xml</file>
+                </gls>
+            </updates>
+        </layout>
+        <secure_url>
+            <gls>/gls/ajax/</gls>
+        </secure_url>
+        <translate>
+            <modules>
+                <Addonline_Gls>
+                    <files>
+                        <shipping>Mage_Shipping.csv</shipping>
+                        <default>Addonline_Gls.csv</default>
+                    </files>
+                </Addonline_Gls>
+            </modules>
+        </translate>
+    </frontend>
+    <admin>
+        <routers>
+            <gls>
+                <use>admin</use>
+                <args>
+                    <module>Addonline_Gls</module>
+                    <frontName>gls</frontName>
+                </args>
+            </gls>
+        </routers>
+    </admin>
+    <adminhtml>
+        <!-- Magento lower than 1.4.0 -->
+        <translate>
+            <modules>
+                <Addonline_Gls>
+                    <files>
+                        <shipping>Mage_Shipping.csv</shipping>
+                        <gls>Addonline_Gls.csv</gls>
+                    </files>
+                </Addonline_Gls>
+            </modules>
+        </translate>
+        <menu>
+            <gls module="gls">
+                <title>GLS Import/Export</title>
+                <sort_order>99</sort_order>
+                <children>
+                    <export translate="title" module="gls">
+                        <title>Export orders</title>
+                        <sort_order>0</sort_order>
+                        <action>gls/export</action>
+                    </export>
+                    <import translate="title" module="gls">
+                        <title>Import tracking</title>
+                        <sort_order>1</sort_order>
+                        <action>gls/import</action>
+                    </import>
+                </children>
+            </gls>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <gls>
+                                            <title>GLS Section</title>
+                                            <sort_order>100</sort_order>
+                                        </gls>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                        <gls translate="title" module="gls">
+                            <title>GLS Import/Export</title>
+                            <sort_order>200</sort_order>
+                            <children>
+                                <export translate="title">
+                                    <title>Export orders</title>
+                                </export>
+                                <import translate="title">
+                                    <title>Import tracking</title>
+                                </import>
+                                <configuration translate="title">
+                                    <title>Configuration</title>
+                                </configuration>
+                            </children>
+                        </gls>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <default>
+        <gls>
+            <general>
+                <weight_unit>kg</weight_unit>
+            </general>
+            <import_export>
+                <active>0</active>
+                <export_folder>var/export/gls/</export_folder>
+                <import_folder>var/import/gls/</import_folder>
+            </import_export>
+            <bundle_product>
+                <process_children>0</process_children>
+                <load_item_options_on_parent>1</load_item_options_on_parent>
+                <load_item_data_on_parent>0</load_item_data_on_parent>
+                <load_product_data_on_parent>0</load_product_data_on_parent>
+            </bundle_product>
+            <configurable_product>
+                <load_item_options_on_parent>1</load_item_options_on_parent>
+                <load_item_data_on_parent>1</load_item_data_on_parent>
+                <load_product_data_on_parent>0</load_product_data_on_parent>
+            </configurable_product>
+        </gls>
+        <carriers>
+            <gls>
+                <title>GLS</title>
+                <active>0</active>
+                <livraisontohome>1</livraisontohome>
+                <configtohome><![CDATA[
 {
  "label": "Livraison à domicile en 24/48H",
  "code": "tohome_fr",
@@ -239,8 +245,8 @@
  "shipto": "{address_filter.AF},{address_filter.AS},{address_filter.NA},{address_filter.SA},{address_filter.OC},{address_filter.AN},{address_filter.DOM},{address_filter.COM}",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 }]]></configtohome>
-				<ordertohome>1</ordertohome>
-				<livraisonfds>0</livraisonfds>
+                <ordertohome>1</ordertohome>
+                <livraisonfds>0</livraisonfds>
                 <configfds><![CDATA[
 {
  "label": "En cas d’absence, choisissez où et quand vous souhaitez être livré",
@@ -249,36 +255,55 @@
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 }]]></configfds>
                 <orderfds>2</orderfds>
-				<livraisonrelay>1</livraisonrelay>
-				<configrelay><![CDATA[
+                <livraisonrelay>1</livraisonrelay>
+                <configrelay><![CDATA[
 {
  "label": "Retrait en Point Relais de votre choix",
  "code": "relay_fr",
  "shipto": "FR",
  "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
 }]]></configrelay>
-				<orderrelay>2</orderrelay>
-				<maxrelayweight>20</maxrelayweight>
-				<maxxlrelayweight>30</maxxlrelayweight>
-				<onlyxlrelay>0</onlyxlrelay>
-				<model>Addonline_Gls_Model_Carrier_ShippingMethod</model>
-				<tracking_view_url>https://gls-group.eu/EU/en/parcel-tracking?match={tracking_number}</tracking_view_url>				
-				<debug>0</debug>
-				<auto_escaping>0</auto_escaping>
-				<auto_correction>1</auto_correction>
-				<stop_to_first_match>0</stop_to_first_match>
-				<sort_order>1</sort_order>
-			</gls>
-		</carriers>
-	</default>
-	<crontab>
-		<jobs>
-			<gls>
-				<schedule>
-					<config_path>gls/import_export/cron_expression</config_path>
-				</schedule>
-				<run><model>addonline_gls/cron::import_export</model></run>
-			</gls>
-		</jobs>
-	</crontab>
+                <orderrelay>3</orderrelay>
+                <maxrelayweight>20</maxrelayweight>
+                <maxxlrelayweight>30</maxxlrelayweight>
+                <onlyxlrelay>0</onlyxlrelay>
+                <livraisonexpress>1</livraisonexpress>
+                <configexpress><![CDATA[
+{
+ "label": "Retrait express",
+ "code": "express_fr",
+ "shipto": "FR",
+ "fees": "!{free_shipping}*{table {cart.price+tax+discount} in 150.00:5.00, 160.00:3.00, 100000.00:00.00}"
+}]]></configexpress>
+                <orderexpress>4</orderexpress>
+                <model>Addonline_Gls_Model_Carrier_ShippingMethod</model>
+                <tracking_view_url>https://gls-group.eu/EU/en/parcel-tracking?match={tracking_number}</tracking_view_url>				
+                <debug>0</debug>
+                <auto_escaping>0</auto_escaping>
+                <auto_correction>1</auto_correction>
+                <stop_to_first_match>0</stop_to_first_match>
+                <sort_order>1</sort_order>
+            </gls>
+        </carriers>
+    </default>
+    <crontab>
+        <jobs>
+            <gls>
+                <schedule>
+                    <config_path>gls/import_export/cron_expression</config_path>
+                </schedule>
+                <run>
+                    <model>gls/cron::import_export</model>
+                </run>
+            </gls>
+	<gls_agencies>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>gls/cron::update_gls_agencies</model>
+                </run>
+            </gls_agencies>
+        </jobs>
+    </crontab>
 </config>

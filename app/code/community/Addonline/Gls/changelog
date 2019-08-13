@@ -1,3 +1,9 @@
+[1.0.7 - 30 Mars 2015]
+ Correction de la limitation à 30Kg sur la livraison à domicile
+
+[1.0.6 - 20 Mars 2015]
+Augmentation de la compatibilité avec le module BL_CustomGrid
+
 [1.0.5 - 07 Janvier 2015]
 Mise en place du téléchargement des commandes
 

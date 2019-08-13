@@ -185,7 +185,40 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
-						</tracking_view_url>						
+						</tracking_view_url>	
+                                                
+						<livraisonexpress translate="label">
+							<label>Express Delivery</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>17</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</livraisonexpress>
+						<configexpress translate="label">
+							<label>Express Delivery setup</label>
+							<frontend_model>gls/adminhtml_system_config_form_field_config</frontend_model>
+							<frontend_type>textarea</frontend_type>
+							<sort_order>18</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<depends>
+								<livraisonexpress>1</livraisonexpress>
+							</depends>
+						</configexpress>
+						<orderexpress translate="label">
+							<label>Express Delivery order</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>19</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<depends>
+								<livraisonexpress>1</livraisonexpress>
+							</depends>
+						</orderexpress>					
 						<debug translate="label comment">
 							<label>Debug</label>
 							<comment>{debug_help}</comment>
@@ -250,6 +283,14 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</weight_unit>
+						<agency_code translate="label">
+							<label>Agency code</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</agency_code>
 						
 					</fields>
 				</general>

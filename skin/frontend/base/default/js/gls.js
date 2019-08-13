@@ -70,21 +70,21 @@ jQuery(function($) {
 	/**
 	 * Sur l'événement change des radios boutons de choix de mode de livraison
 	 */
-	$("input[id^=\"s_method_gls\"]").live("click", function() {		
+	$(document).on("click", "input[id^=\"s_method_gls\"]", function() {
 		shippingGLSRadioCheck(this);
 	});			
 	
 	/*
 	 * Evenement sur la modification du point relais
 	 */
-	$(".modifier_relay").live("click", function() {		
+	$(document).on("click",".modifier_relay", function() {
 		$("input[id^=\"s_method_gls\"]").click();
 	});	
 	
 	/*
 	 * Sur l'évènement de choix de relay
 	 */
-	$('.choose-relay-point').live("click",function(e){
+	$(document).on("click",'.choose-relay-point',function(e){
 		e.preventDefault();
 		choisirRelaisGLS($(this).data('relayindex'));
 	});
@@ -161,6 +161,8 @@ function getTypeGlsFromRadio(radio, forDescription) {
 		return 'fds';
 	} else if (typeGls.startWith("relay")){ 
 		return 'relay';
+	} else if (typeGls.startWith("express")){ 
+		return 'express';
 	} else {
 		// Sinon c'est un type de livraison inconnu
 		alert("Mauvaise configuration du module GLS : dans le champ configuration le code doit commencer par tohome, fds ou relay");
@@ -262,25 +264,14 @@ function loadMap(){
 			position: google.maps.ControlPosition.RIGHT_TOP
 	    }
 	}
+
+	jQuery("#layer_gls").popup({
+		beforeopen: function(){ glsRelayMap = new google.maps.Map(document.getElementById('map_gls'), mapOptions); },
+		onclose: function(){ jQuery("#layer_gls").html(''); resetGLSShippingMethod() },
+		transition: 'all 0.3s',
+	});
 	
-	if( jQuery("#layer_gls").data("overlay") == null ) {
-		jQuery("#layer_gls").overlay({
-			mask: {
-				color: '#000', 
-				loadSpeed: 200, 
-				opacity: 0.5 
-			}, 
-			load: true,
-			onLoad: function(){ glsRelayMap = new google.maps.Map(document.getElementById('map_gls'), mapOptions); },
-			closeOnClick: false,
-			top: "center",	
-			fixed: false,
-			onClose: function(){ jQuery("#layer_gls").html(''); jQuery("#layer_gls").data("overlay",null); resetGLSShippingMethod()}
-		});	
-	} else {
-		// glsRelayMap.setCenter(glsMyPosition);
-	}
-	
+	jQuery("#layer_gls").popup('show');
 	jQuery("#shipping-method-please-wait").hide();
 
 }
@@ -360,7 +351,7 @@ function infoGLSBulleGenerator(relay) {
 
 function attachGLSClick(markerGLS,infowindowGLS, index){	
 	// Clic sur le relais dans la colonne de gauche
-	jQuery("#gls_point_relay_"+index).live("click",function() {		
+	jQuery(document).on("click","#gls_point_relay_"+index,function() {
 			clickHandler(markerGLS,infowindowGLS, index);		   
 		});
 		
@@ -403,6 +394,26 @@ function choisirRelaisGLS(index) {
 			return;			
 		}
 	// }
+
+    glsurl = glsBaseUrl + "saveInSessionRelayInformations/";
+    jQuery.ajax({
+        url: glsurl,
+        data: {                             // <-- just pass an object
+            name: jQuery('#gls_point_relay_'+index).find('.GLS_relay_name').text(),
+            address: jQuery('#gls_point_relay_'+index).find('.GLS_relay_address').text(),
+            city : jQuery('#gls_point_relay_'+index).find('.GLS_relay_city').text(),
+            zipcode : jQuery('#gls_point_relay_'+index).find('.GLS_relay_zipcode').text(),
+            relayId : jQuery('#gls_point_relay_'+index).find('.GLS_relay_id').text(),
+            phone : jQuery("#num_telephone").val(),
+            warnbyphone : warnbyphone,
+        },
+        dataType: 'json',
+        success: function(){
+            // On fait la sauvegarde de la méthode de livraison
+            shippingMethod.save();
+        }
+    });
+
 	var contenu_html = "<div id='gls_relais_choisi'><span>"+jQuery('#gls_point_relay_'+index).find('.GLS_relay_name').text()+"</span>"      +" <span class='modifier_relay'>" + Translator.translate("Change ParcelShop") + "</span>"   +  "<br/>"+jQuery('#gls_point_relay_'+index).find('.GLS_relay_address').text()+"<br/>"+jQuery('#gls_point_relay_'+index).find('.GLS_relay_zipcode').text()+" "+jQuery('#gls_point_relay_'+index).find('.GLS_relay_city').text() + "</div>";
 	jQuery("input[id^=\"s_method_gls_relay_\"]").each(function(index, element){
 		jQuery(element).parent().append(contenu_html);
@@ -418,24 +429,5 @@ function choisirRelaisGLS(index) {
 	glsRelaisChoisi =  jQuery('#gls_point_relay_'+index).find('.GLS_relay_id').text();
 
 	// On cache le layer
-	jQuery("#layer_gls").data("overlay").close();
-	
-	glsurl = glsBaseUrl + "saveInSessionRelayInformations/"		
-	jQuery.ajax({
-		url: glsurl,
-		data: {                             // <-- just pass an object
-	          name: jQuery('#gls_point_relay_'+index).find('.GLS_relay_name').text(),
-	          address: jQuery('#gls_point_relay_'+index).find('.GLS_relay_address').text(),
-	          city : jQuery('#gls_point_relay_'+index).find('.GLS_relay_city').text(),
-	          zipcode : jQuery('#gls_point_relay_'+index).find('.GLS_relay_zipcode').text(),	
-	          relayId : jQuery('#gls_point_relay_'+index).find('.GLS_relay_id').text(),
-	          phone : jQuery("#num_telephone").val(),
-	          warnbyphone : warnbyphone,
-	    },
-	    dataType: 'json', 
-		success: function(){
-			// On fait la sauvegarde de la méthode de livraison
-			 shippingMethod.save();	
-		}
-	});		
+	jQuery("#layer_gls").popup('hide');
 }

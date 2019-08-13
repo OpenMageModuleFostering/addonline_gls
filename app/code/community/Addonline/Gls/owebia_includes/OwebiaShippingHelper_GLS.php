@@ -397,12 +397,21 @@ class OwebiaShippingHelper_GLS
 		$conditions = $this->getRowProperty($row, 'conditions');
 		//ADDONLINE : on exclu la livraison GLS si un article dépasse le point max XL (30kg)
 		$code = $row['*id'];
-		$conditionGLS = '({count items where product.weight > '.Mage::getStoreConfig('carriers/gls/maxxlrelayweight').'} == 0)';
-		if (isset($conditions)) {
-			$conditions .= ' && '.$conditionGLS;
-		} else {
-			$conditions .= $conditionGLS;
-		}
+        $conditionGLS = '';
+        //Si on est pas sur une livraison à domicile
+        if(substr($code,0,7) != 'tohome_'){
+            $conditionGLS = '({count items where product.weight > '.Mage::getStoreConfig('carriers/gls/maxxlrelayweight').'} == 0)';
+        }else{
+            $conditionGLS = '({count items where product.weight > 99999} == 0)';
+        }
+
+        //On ajout nos conditions GLS
+        if (isset($conditions)) {
+            $conditions .= ' && '.$conditionGLS;
+        } else {
+            $conditions .= $conditionGLS;
+        }
+
 		//FIN ADDONLINE
 		if (isset($conditions)) {
 			$result = $this->processFormula($process, $row, 'conditions', $conditions, $is_checking);

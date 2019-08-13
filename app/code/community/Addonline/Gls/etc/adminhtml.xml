@@ -44,9 +44,6 @@
 					<action>gls/import</action>
 				</import>
 			</children>
-			<depends>
-				<config>carriers/gls/importexport</config>
-			</depends>
 		</gls>
 	</menu>
 	<acl>

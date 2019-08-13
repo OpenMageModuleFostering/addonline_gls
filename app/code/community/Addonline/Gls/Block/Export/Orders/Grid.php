@@ -54,7 +54,7 @@ class Addonline_Gls_Block_Export_Orders_Grid extends Mage_Adminhtml_Block_Widget
                 array('shipping_method')
             );
             $collection->addAttributeToFilter(
-                'shipping_method', 
+                'order.shipping_method',
                 array('like' => 'gls_%')
             );
         } else {
@@ -192,7 +192,8 @@ class Addonline_Gls_Block_Export_Orders_Grid extends Mage_Adminhtml_Block_Widget
             'carrier', 
             array(
                     'header' => Mage::helper('sales')->__('Carrier'),
-                    'index' => 'shipping_method'
+                    'index' => 'shipping_method',
+                    'filter_index' => 'order.shipping_method'
             )
         );
         

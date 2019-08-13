@@ -54,6 +54,7 @@ class Addonline_Gls_Model_Sales_Quote_Address extends Mage_Sales_Model_Quote_Add
             $aOrderRatesGLS['ordertohome'] = $carrier->getConfigData('ordertohome');
             $aOrderRatesGLS['orderfds'] = $carrier->getConfigData('orderfds');
             $aOrderRatesGLS['orderrelay'] = $carrier->getConfigData('orderrelay');
+            $aOrderRatesGLS['orderexpress'] = $carrier->getConfigData('orderexpress');
         }
         
         if (count($aOrderRatesGLS)) {
@@ -72,6 +73,9 @@ class Addonline_Gls_Model_Sales_Quote_Address extends Mage_Sales_Model_Quote_Add
                 }
                 if (strpos($sCode, 'ls_tohome') > 0) {
                     $rates['gls'][$aOrderRatesGLS['ordertohome']] = $orderedRate;
+                }
+                if (strpos($sCode, 'ls_express') > 0) {
+                    $rates['gls'][$aOrderRatesGLS['orderexpress']] = $orderedRate;
                 }
             }
             

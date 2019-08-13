@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * Copyright (c) 2014 GLS
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * It is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Addonline
+ * @package     Addonline_Gls
+ * @copyright   Copyright (c) 2014 GLS
+ * @author 	    Addonline (http://www.addonline.fr)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout version="0.1.0">
+	<checkout_onepage_index>
+		<reference name="head">
+			<action method="addCss">
+				<stylesheet>css/gls.css</stylesheet>
+			</action>
+
+			<!-- <action method="addJs">
+				<script>jquery/jquery-2.1.3.min.js</script>
+			</action> -->
+			<action method="addJs">
+				<script>jquery/jquery.noconflict.js</script>
+                <params><![CDATA[data-group="gls_001"]]></params>
+			</action>
+			<action method="addJs">
+				<script>jquery/jquery.popupoverlay.js</script>
+                <params><![CDATA[data-group="gls_002"]]></params>
+			</action>
+			<action method="addItem">
+				<type>skin_js</type>
+				<script>js/gls.js</script>
+			</action>
+
+			<block type="core/text" name="map.js">
+				<action method="setText">
+					<text><![CDATA[<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&region=FR&v=3"></script>]]></text>
+				</action>
+			</block>
+
+		</reference>
+
+		<reference name="before_body_end">
+			<block type="core/template" name="gls_additional" after="-"
+				template="gls/additional.phtml" />
+		</reference>
+
+	</checkout_onepage_index>
+
+	<onestepcheckout_index_index>
+		<reference name="head">
+			<action method="addCss">
+				<stylesheet>css/gls.css</stylesheet>
+			</action>
+
+			<!-- <action method="addJs">
+				<script>jquery/jquery-2.1.3.min.js</script>
+			</action> -->
+			<action method="addJs">
+				<script>jquery/jquery.noconflict.js</script>
+                <params><![CDATA[data-group="gls_001"]]></params>
+			</action>
+			<!-- <action method="addJs">
+				<script>jquery/jquery.tools.min.js</script>
+			</action> -->
+
+            <action method="addJs">
+                <script>jquery/jquery.popupoverlay.js</script>
+                <params><![CDATA[data-group="gls_002"]]></params>
+            </action>
+
+			<action method="addItem">
+				<type>skin_js</type>
+				<script>js/gls.js</script>
+			</action>
+			<block type="core/text" name="map.js">
+				<action method="setText">
+					<text><![CDATA[<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&region=FR&v=3"></script>]]></text>
+				</action>
+			</block>
+		</reference>
+
+		<reference name="before_body_end">
+			<block type="core/template" name="gls_additional" after="-"
+				template="gls/additional.phtml" />
+		</reference>
+
+	</onestepcheckout_index_index>
+
+	<gls_ajax_selector>
+		<remove name="right" />
+		<remove name="left" />
+
+		<block type="gls/selector" name="root" output="toHtml"
+			template="gls/selector.phtml" />
+	</gls_ajax_selector>
+
+	<gls_ajax_listrelais>
+		<remove name="right" />
+		<remove name="left" />
+
+		<block type="gls/listrelais" name="root" output="toHtml"
+			template="gls/listrelais.phtml" />
+	</gls_ajax_listrelais>
+
+</layout>

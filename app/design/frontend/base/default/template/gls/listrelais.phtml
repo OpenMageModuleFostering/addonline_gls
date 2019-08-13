@@ -1,0 +1,73 @@
+<?php
+/**
+ * Copyright (c) 2014 GLS
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * It is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Addonline
+ * @package     Addonline_Gls
+ * @copyright   Copyright (c) 2014 GLS
+ * @author 	    Addonline (http://www.addonline.fr)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+if ($aListRelais = $this->getListRelay()) :
+    $i = 0;
+    if(isset($aListRelais['error'])): ?>
+    	<span class="gls_ws_error"><?php echo $aListRelais['error']; ?></span>
+    <?php else:
+
+    foreach ($aListRelais as $relais) :
+        ?>
+<div class="gls_point_relay" id="gls_point_relay_<?php echo $i; ?>">
+	<span class="GLS_relay_index"><?php echo $i; ?></span> <span
+		class="GLS_relay_id"><?php echo $relais['relayId']; ?></span> <span
+		class="GLS_relay_name"><?php echo $relais['relayName']; ?></span> <span
+		class="GLS_relay_address"><?php echo $relais['relayAddress']; ?></span>
+	<span class="GLS_relay_zipcode"><?php echo $relais['relayZipCode']; ?></span>
+	<span class="GLS_relay_city"><?php echo $relais['relayCity']; ?></span>
+	<span class="GLS_relay_latitude"><?php echo $relais['relayLatitude']; ?></span>
+	<span class="GLS_relay_longitude"><?php echo $relais['relayLongitude']; ?></span>
+	<div>
+		<span class="GLS_relay_horaires"><?php echo __("Opening hours")?></span>
+		<a href="#" class='choose-relay-point'
+			data-relayindex="<?php echo $i; ?>"><?php echo __("Choose this ParcelShop")?></a>
+	</div>
+	<span class="GLS_relay_hours">
+		<table cellpadding="0" cellspacing="0">
+		<?php
+        $aDays = array(
+            '0' => __("Monday"),
+            '1' => __("Tuesday"),
+            '2' => __("Wednesday"),
+            '3' => __("Thursday"),
+            '4' => __("Friday"),
+            '5' => __("Saturday"),
+            '6' => __("Sunday")
+        );
+        foreach ($relais['relayWorkingDays'] as $day => $openHours) {
+            echo '<tr>';
+            echo '<td class="day">' . $aDays[$day] . '</td>';
+            $hours = '';
+            if ($openHours['breaks']['from']) {
+                $hours = '<td>' . substr_replace(substr($openHours['hours']['from'], 0, 4), 'h' . $openHours['hours']['from'][2], 2, 1) . ' - ' . substr_replace(substr($openHours['breaks']['from'], 0, 4), 'h' . $openHours['breaks']['from'][2], 2, 1) . ' / ' . substr_replace(substr($openHours['breaks']['to'], 0, 4), 'h' . $openHours['breaks']['to'][2], 2, 1) . ' - ' . substr_replace(substr($openHours['hours']['to'], 0, 4), 'h' . $openHours['hours']['to'][2], 2, 1) . '</td>';
+            } else {
+                $hours = '<td>' . substr_replace(substr($openHours['hours']['from'], 0, 4), 'h' . $openHours['hours']['from'][2], 2, 1) . ' - ' . substr_replace(substr($openHours['hours']['to'], 0, 4), 'h' . $openHours['hours']['to'][2], 2, 1) . '</td>';
+            }
+            echo $hours;
+            echo '</tr>';
+        }
+        ?>
+		</table>
+	</span>
+</div>
+<?php
+        $i ++;
+    endforeach
+    ;
+    endif;
+
+endif;?>
