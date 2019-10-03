@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/Addonline_Gls",
+    "name": "OpenMageModuleFostering\/Addonline_Gls",
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
     "description": "GLS, you transporter partner for parcels shipped from France (official)",
     "authors": [
-    {
-        "name": "Addonline",
-        "email": "contact@addonline.fr"
-    }
-],
+        {
+            "name": "Addonline",
+            "email": "contact@addonline.fr"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
